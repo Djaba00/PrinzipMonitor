@@ -1,4 +1,7 @@
-﻿namespace PrinzipMonitorService
+﻿using PrinzipMonitorService.DAL.Repositories.FlatRepository;
+using PrinzipMonitorService.DAL.Repositories.UserRepository;
+
+namespace PrinzipMonitorService
 {
     public class Startup
     {
@@ -10,6 +13,9 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IFlatRepository, FlatRepository>();
+
             services.AddControllers();
 
         }

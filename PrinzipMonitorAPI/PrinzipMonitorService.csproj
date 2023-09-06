@@ -15,12 +15,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="BLL\ViewModels\" />
-    <Folder Include="DAL\ApplicationContext\MsSql\" />
     <Folder Include="PLL\Controllers\" />
     <Folder Include="PLL\Mapping\" />
   </ItemGroup>

@@ -14,6 +14,6 @@ namespace PrinzipMonitorService
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-            })
+            });
     }
 }
