@@ -2,7 +2,7 @@
 {
     public interface IFlatRepository
     {
-        void CheckPrice(string refer);
+        void CheckPrice(string url);
         void HandleObservers();
     }
 }

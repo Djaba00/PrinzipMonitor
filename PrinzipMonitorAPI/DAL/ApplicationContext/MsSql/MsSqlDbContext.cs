@@ -12,5 +12,18 @@ namespace PrinzipMonitorService.DAL.ApplicationContext.MsSql
         {
             Database.EnsureCreated();
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<User>(entity =>
+            {
+                entity.HasIndex(e => e.Email).IsUnique();
+            });
+
+            builder.Entity<Flat>(entity =>
+            {
+                entity.HasIndex(e => e.Url).IsUnique();
+            });
+        }
     }
 }
