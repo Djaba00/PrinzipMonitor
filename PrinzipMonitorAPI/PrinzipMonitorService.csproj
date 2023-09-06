@@ -7,16 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Новая папка\**" />
+    <Content Remove="Новая папка\**" />
+    <EmbeddedResource Remove="Новая папка\**" />
+    <None Remove="Новая папка\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="BLL\ViewModels\" />
-    <Folder Include="DAL\Repositories\" />
+    <Folder Include="DAL\ApplicationContext\MsSql\" />
     <Folder Include="PLL\Controllers\" />
     <Folder Include="PLL\Mapping\" />
-    <Folder Include="Новая папка\" />
   </ItemGroup>
 
 </Project>
