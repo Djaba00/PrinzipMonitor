@@ -6,16 +6,13 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
     public class PriceChecker
     {
         string Url { get; set; }
-        decimal Price { get; set; }
-        CookieContainer CookieContainer { get; set; }
 
         public PriceChecker(string setUrl)
         {
             Url = setUrl;
-            CookieContainer = new CookieContainer();
         }
        
-        public PrinzipResponse GetPrice()
+        public decimal GetPrice()
         {
             try
             {
@@ -38,7 +35,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
                         {
                             if (!response.IsSuccessStatusCode)
                             {
-                                return null;
+                                return 0;
                             }
                         }
                     }
@@ -60,7 +57,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
                                 if (!string.IsNullOrEmpty(json))
                                 {
                                     PrinzipResponse result = Newtonsoft.Json.JsonConvert.DeserializeObject<PrinzipResponse>(json);
-                                    return result;
+                                    return result.price;
                                 }
                             }
                         }
@@ -72,7 +69,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
                 
             }
 
-            return null;
+            return 0;
         }
     }
 }

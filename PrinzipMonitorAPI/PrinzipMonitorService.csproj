@@ -22,8 +22,6 @@
 
   <ItemGroup>
     <Folder Include="BLL\ViewModels\" />
-    <Folder Include="PLL\Controllers\" />
-    <Folder Include="PLL\Mapping\" />
   </ItemGroup>
 
 </Project>
