@@ -11,8 +11,8 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
         {
             Url = setUrl;
         }
-       
-        public decimal GetPrice()
+
+        public int? GetPrice()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
                         {
                             if (!response.IsSuccessStatusCode)
                             {
-                                return 0;
+                                return null;
                             }
                         }
                     }
@@ -66,10 +66,10 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
             }
             catch (Exception ex)
             {
-                
+
             }
 
-            return 0;
+            return null;
         }
     }
 }

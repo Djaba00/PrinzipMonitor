@@ -24,6 +24,11 @@ namespace PrinzipMonitorService.DAL.ApplicationContext.MsSql
             {
                 entity.HasIndex(e => e.Url).IsUnique();
             });
+
+            builder.Entity<User>()
+                .HasMany(u => u.Subscriptions)
+                .WithMany(f => f.Observers)
+                .UsingEntity(j => j.ToTable("Subscribtions"));
         }
     }
 }

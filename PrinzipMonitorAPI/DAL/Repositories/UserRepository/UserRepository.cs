@@ -12,33 +12,34 @@ namespace PrinzipMonitorService.DAL.Repositories.UserRepository
             _db = db;
         }
 
-        public void AddSubscription(string email, string url)
+        public void Create(User user)
         {
-            var user = _db.Users.FirstOrDefault(u => u.Email == email);
-
-            if (user == null)
+            if (_db.Users.FirstOrDefault(u => u.Email == user.Email) is null)
             {
-                user = new User() { Email = email };
+                _db.Users.Add(user);
+                _db.SaveChanges();
             }
-
-            var flat = _db.Flats.FirstOrDefault(f => f.Url == url);
-
-            if (flat == null)
-            {
-                flat = new Flat() { Url = url };
-            }
-
-            user.Subscriptions.Add(flat);
-            flat.Observers.Add(user);
-
-            _db.Users.Add(user);
+                
         }
 
-        public List<Flat> GetSubscriptionsByEmail(string email)
+        public User Get(string email)
         {
-            var results = _db.Users.FirstOrDefault(u => u.Email == email).Subscriptions;
+            return _db.Users.FirstOrDefault(u => u.Email == email);
+        }
 
-            return results;
+        public IEnumerable<User> GetAll()
+        {
+            return _db.Users;
+        }
+
+        public void Update(User updateUser)
+        {
+            User currentUser = Get(updateUser.Email);
+
+            currentUser.Subscriptions = updateUser.Subscriptions;
+
+            _db.Users.Update(currentUser);
+            _db.SaveChanges();
         }
     }
 }

@@ -2,6 +2,7 @@
 using PrinzipMonitorService.BLL.Models;
 using PrinzipMonitorService.DAL.ApplicationContext.MsSql;
 using PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers;
+using System;
 using System.Net;
 using System.Net.Mail;
 
@@ -15,35 +16,34 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository
             _db = db;
         }
 
-        public void CheckPrice(string url)
+        public void Create(Flat flat)
         {
-            var flat = _db.Flats.FirstOrDefault(f => f.Url == url);
-
-            if (flat != null)
+            if ( _db.Flats.FirstOrDefault(f => f.Url == flat.Url) is null )
             {
-                var newPrice = new PriceChecker(url).GetPrice(); 
-
-                if (newPrice != flat.LastPrice)
-                {
-                    var oldPrice = flat.LastPrice;
-
-                    flat.LastPrice = newPrice;
-
-                    foreach (var user in flat.Observers)
-                    {
-                        NotifyObserver(user.Email, oldPrice, newPrice);
-                    }
-                }
-            }
-            else
-            {
-                // Exception("На данную квартиру нет подписок");
+                _db.Flats.Add(flat);
+                _db.SaveChanges();
             }
         }
 
-        public async Task NotifyObserver(string email, decimal oldPrice, decimal newPrice)
+        public Flat Get(string url)
         {
-            await EmailService.SendEmail(email, oldPrice, newPrice);
+            return _db.Flats.FirstOrDefault(f => f.Url == url);
+        }
+
+        public IEnumerable<Flat> GetAll()
+        {
+            return _db.Flats;
+        }
+
+        public void Update(Flat updateFlat)
+        {
+            Flat currentFlat = Get(updateFlat.Url);
+
+            currentFlat.LastPrice = updateFlat.LastPrice;
+            currentFlat.Observers = updateFlat.Observers;
+
+            _db.Flats.Update(currentFlat);
+            _db.SaveChanges();
         }
     }
 }

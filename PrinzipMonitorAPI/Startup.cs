@@ -20,8 +20,8 @@ namespace PrinzipMonitorService
             string msSqlConnectionString = Configuration.GetConnectionString("MsConnection");
 
             services.AddDbContext<MsSqlDbContext>(options => options.UseSqlServer(msSqlConnectionString))
-                .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IFlatRepository, FlatRepository>();
+                .AddTransient<IUserRepository, UserRepository>()
+                .AddTransient<IFlatRepository, FlatRepository>();
 
             services.AddControllers();
 

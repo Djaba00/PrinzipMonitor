@@ -5,7 +5,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
 {
     public static class EmailService
     {
-        public static async Task SendEmail(string email, decimal oldPrice, decimal newPrice)
+        public static void SendEmail(string email, int? oldPrice, int? newPrice)
         {
             MailAddress from = new MailAddress("yatytdlatestov@gmail.com", "FlatQuestion");
 
@@ -18,7 +18,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
             SmtpClient smtpClient = new SmtpClient("smpt.gmail.com", 587);
             smtpClient.Credentials = new NetworkCredential("yatytdlatestov@gmail.com", "testsForTests");
             smtpClient.EnableSsl = true;
-            await smtpClient.SendMailAsync(message);
+            smtpClient.Send(message);
         }
     }
 }

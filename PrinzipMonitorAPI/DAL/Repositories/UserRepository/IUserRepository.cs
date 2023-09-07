@@ -4,7 +4,9 @@ namespace PrinzipMonitorService.DAL.Repositories.UserRepository
 {
     public interface IUserRepository
     {
-        void AddSubscription(string email, string url);
-        List<Flat> GetSubscriptionsByEmail(string email);
+        void Create(User user);
+        User Get(string email);
+        IEnumerable<User> GetAll();
+        void Update(User updateUser);
     }
 }
