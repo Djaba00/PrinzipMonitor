@@ -1,4 +1,4 @@
-﻿namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
+﻿namespace PrinzipMonitorService.Pll.Services.PriceCheckerService
 {
     public class PrinzipResponse
     {

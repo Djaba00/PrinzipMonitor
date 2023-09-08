@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography.Xml;
+﻿using System.Collections;
 
 namespace PrinzipMonitorService.BLL.Models
 {
@@ -9,11 +7,11 @@ namespace PrinzipMonitorService.BLL.Models
         public int Id { get; set; }
         public string Url { get; set; }
         public int? LastPrice { get; set; }
-        public List<User> Observers { get; set; } = new List<User>();
+        public List<User> Users { get; set; }
 
-        //public Flat() 
-        //{ 
-        //    Observers = new List<User>();
-        //}
+        public Flat()
+        {
+            Users = new List<User>();
+        }
     }
 }

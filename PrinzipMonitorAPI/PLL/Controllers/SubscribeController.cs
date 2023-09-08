@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrinzipMonitorService.BLL.Models;
-using PrinzipMonitorService.DAL.ApplicationContext.MsSql;
 using PrinzipMonitorService.DAL.Repositories.FlatRepository;
-using PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers;
 using PrinzipMonitorService.DAL.Repositories.UserRepository;
-using System;
+using PrinzipMonitorService.Pll.Services.PriceCheckerService;
+using PrinzipMonitorService.Pll.Services.EmailService;
 
 namespace PrinzipMonitorService.PLL.Controllers
 {
@@ -68,8 +67,8 @@ namespace PrinzipMonitorService.PLL.Controllers
                 flatRepository.Create(flat);
             }
 
-            user.Subscriptions.Add(flat);
-            flat.Observers.Add(user);
+            user.Flats.Add(flat);
+            flat.Users.Add(user);
 
             userRepository.Update(user);
             flatRepository.Update(flat);
@@ -88,7 +87,7 @@ namespace PrinzipMonitorService.PLL.Controllers
         {
             var user = userRepository.Get(email);
 
-            return user.Subscriptions;
+            return user.Flats.ToList();
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace PrinzipMonitorService.PLL.Controllers
         /// </summary>
         [Route("CheckPrices")]
         [HttpGet]
-        public void CheckPrices()
+        public async Task CheckPrices()
         {
             var flats = flatRepository.GetAll().ToList();
 
@@ -112,10 +111,11 @@ namespace PrinzipMonitorService.PLL.Controllers
                         flat.LastPrice = newPrice;
                         flatRepository.Update(flat);
 
-                        foreach (var user in flat.Observers)
+                        foreach (var user in flat.Users)
                         {
-                            EmailService.SendEmail(user.Email, oldPrice, newPrice);
-                            Console.WriteLine($"Сообщение {user.Email} отправлено"); // логгирование в консоль
+                            var result = await EmailService.SendEmailAsync(user.Email, oldPrice, newPrice);
+                            if(result)
+                                Console.WriteLine($"Сообщение {user.Email} отправлено"); // логгирование в консоль
                         }
                     }
                 }

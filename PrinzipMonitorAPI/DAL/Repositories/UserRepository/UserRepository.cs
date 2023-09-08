@@ -24,19 +24,19 @@ namespace PrinzipMonitorService.DAL.Repositories.UserRepository
 
         public User Get(string email)
         {
-            return _db.Users.FirstOrDefault(u => u.Email == email);
+            return _db.Users.Include(u => u.Flats).FirstOrDefault(u => u.Email == email);
         }
 
         public IEnumerable<User> GetAll()
         {
-            return _db.Users;
+            return _db.Users.Include(u => u.Flats);
         }
 
         public void Update(User updateUser)
         {
             User currentUser = Get(updateUser.Email);
 
-            currentUser.Subscriptions = updateUser.Subscriptions;
+            currentUser.Flats = updateUser.Flats;
 
             _db.Users.Update(currentUser);
             _db.SaveChanges();

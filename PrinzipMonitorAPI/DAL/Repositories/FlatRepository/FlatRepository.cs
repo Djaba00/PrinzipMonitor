@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PrinzipMonitorService.BLL.Models;
 using PrinzipMonitorService.DAL.ApplicationContext.MsSql;
-using PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers;
 using System;
 using System.Net;
 using System.Net.Mail;
@@ -27,12 +26,12 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository
 
         public Flat Get(string url)
         {
-            return _db.Flats.FirstOrDefault(f => f.Url == url);
+            return _db.Flats.Include(f => f.Users).FirstOrDefault(f => f.Url == url);
         }
 
         public IEnumerable<Flat> GetAll()
         {
-            return _db.Flats;
+            return _db.Flats.Include(f => f.Users);
         }
 
         public void Update(Flat updateFlat)
@@ -40,7 +39,7 @@ namespace PrinzipMonitorService.DAL.Repositories.FlatRepository
             Flat currentFlat = Get(updateFlat.Url);
 
             currentFlat.LastPrice = updateFlat.LastPrice;
-            currentFlat.Observers = updateFlat.Observers;
+            currentFlat.Users = updateFlat.Users;
 
             _db.Flats.Update(currentFlat);
             _db.SaveChanges();

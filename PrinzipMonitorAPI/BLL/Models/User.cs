@@ -1,14 +1,16 @@
-﻿namespace PrinzipMonitorService.BLL.Models
+﻿using System.Collections;
+
+namespace PrinzipMonitorService.BLL.Models
 {
     public class User
     {
         public int Id { get; set; }
         public string Email { get; set; }
-        public List<Flat> Subscriptions { get; set; } = new List<Flat>();
+        public List<Flat> Flats { get; set; }
 
-        //public User()
-        //{
-        //    Subscriptions = new List<Flat>();
-        //}
+        public User()
+        {
+            Flats = new List<Flat>();
+        }
     }
 }

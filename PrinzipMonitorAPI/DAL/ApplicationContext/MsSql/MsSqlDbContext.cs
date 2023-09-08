@@ -13,6 +13,11 @@ namespace PrinzipMonitorService.DAL.ApplicationContext.MsSql
             Database.EnsureCreated();
         }
 
+        protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //optionsBuilder.LogTo(Console.WriteLine, LogLevel.None);
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>(entity =>
@@ -26,8 +31,8 @@ namespace PrinzipMonitorService.DAL.ApplicationContext.MsSql
             });
 
             builder.Entity<User>()
-                .HasMany(u => u.Subscriptions)
-                .WithMany(f => f.Observers)
+                .HasMany(u => u.Flats)
+                .WithMany(f => f.Users)
                 .UsingEntity(j => j.ToTable("Subscribtions"));
         }
     }

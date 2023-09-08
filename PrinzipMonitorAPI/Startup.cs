@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using PrinzipMonitorService.DAL.ApplicationContext.MsSql;
 using PrinzipMonitorService.DAL.Repositories.FlatRepository;
 using PrinzipMonitorService.DAL.Repositories.UserRepository;
@@ -19,11 +18,13 @@ namespace PrinzipMonitorService
 
             string msSqlConnectionString = Configuration.GetConnectionString("MsConnection");
 
-            services.AddDbContext<MsSqlDbContext>(options => options.UseSqlServer(msSqlConnectionString))
+            services.AddDbContext<MsSqlDbContext>(options => options.UseSqlServer(msSqlConnectionString).LogTo(Console.WriteLine, LogLevel.None))
                 .AddTransient<IUserRepository, UserRepository>()
                 .AddTransient<IFlatRepository, FlatRepository>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
         }
 

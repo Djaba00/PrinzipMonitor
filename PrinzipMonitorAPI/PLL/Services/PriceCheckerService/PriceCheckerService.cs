@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace PrinzipMonitorService.DAL.Repositories.FlatRepository.Helpers
+namespace PrinzipMonitorService.Pll.Services.PriceCheckerService
 {
     public class PriceChecker
     {
