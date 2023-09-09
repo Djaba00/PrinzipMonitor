@@ -4,9 +4,9 @@ namespace PrinzipMonitorService.DAL.Repositories.UserRepository
 {
     public interface IUserRepository
     {
-        void Create(User user);
-        User Get(string email);
-        IEnumerable<User> GetAll();
-        void Update(User updateUser);
+        Task CreateAsync(User user);
+        Task<User> GetAsync(string email);
+        Task<List<User>> GetAllAsync();
+        Task UpdateAsync(User updateUser);
     }
 }

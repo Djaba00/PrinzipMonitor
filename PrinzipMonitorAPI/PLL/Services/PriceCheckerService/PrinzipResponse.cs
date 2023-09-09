@@ -1,4 +1,4 @@
-﻿namespace PrinzipMonitorService.Pll.Services.PriceCheckerService
+﻿namespace PrinzipMonitorService.PLL.Services.PriceCheckerService
 {
     public class PrinzipResponse
     {

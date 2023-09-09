@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace PrinzipMonitorService.Pll.Services.PriceCheckerService
+namespace PrinzipMonitorService.PLL.Services.PriceCheckerService
 {
     public class PriceChecker
     {

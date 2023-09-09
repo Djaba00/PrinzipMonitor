@@ -2,20 +2,26 @@
 using PrinzipMonitorService.BLL.Models;
 using PrinzipMonitorService.DAL.Repositories.FlatRepository;
 using PrinzipMonitorService.DAL.Repositories.UserRepository;
-using PrinzipMonitorService.Pll.Services.PriceCheckerService;
-using PrinzipMonitorService.Pll.Services.EmailService;
+using PrinzipMonitorService.PLL.Services.PriceCheckerService;
+using PrinzipMonitorService.PLL.Services.EmailService;
+using PrinzipMonitorService.BLL.ViewModels;
+using AutoMapper;
 
 namespace PrinzipMonitorService.PLL.Controllers
 {
     public class SubscribeController : Controller
     {
 
-        IUserRepository userRepository;
-        IFlatRepository flatRepository;
-        public SubscribeController(IUserRepository setUserRepository, IFlatRepository setFlatRepository)
+        IUserRepository _userRepository;
+        IFlatRepository _flatRepository;
+
+        IMapper _mapper;
+
+        public SubscribeController(IUserRepository setUserRepository, IFlatRepository setFlatRepository, IMapper setMapper)
         {
-            userRepository = setUserRepository;
-            flatRepository = setFlatRepository;
+            _userRepository = setUserRepository;
+            _flatRepository = setFlatRepository;
+            _mapper = setMapper;
         }
 
         /// <summary>
@@ -24,9 +30,17 @@ namespace PrinzipMonitorService.PLL.Controllers
         /// <returns></returns>
         [Route("Flats")]
         [HttpGet]
-        public List<Flat> GetFlats()
+        public async Task<List<FlatViewModel>> GetFlats()
         {
-            return flatRepository.GetAll().ToList();
+            var flats = await _flatRepository.GetAllAsync();
+            var result = new List<FlatViewModel>();
+
+            foreach (var flat in flats)
+            {
+                result.Add(_mapper.Map<FlatViewModel>(flat));
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -35,9 +49,17 @@ namespace PrinzipMonitorService.PLL.Controllers
         /// <returns></returns>
         [Route("Users")]
         [HttpGet]
-        public List<User> GetUsers()
+        public async Task<List<UserViewModel>> GetUsers()
         {
-            return userRepository.GetAll().ToList();
+            var users = await _userRepository.GetAllAsync();
+            var result = new List<UserViewModel>();
+
+            foreach (var user in users)
+            {
+                result.Add(_mapper.Map<UserViewModel>(user));
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -47,31 +69,31 @@ namespace PrinzipMonitorService.PLL.Controllers
         /// <param name="url"></param>
         [Route("AddSubscription")]
         [HttpPost]
-        public void AddSubscription(string email, string url)
+        public async Task AddSubscription(string email, string url)
         {
-            var user = userRepository.Get(email);
+            var user = await _userRepository.GetAsync(email);
 
             if (user == null)
             {
                 user = new User() { Email = email };
 
-                userRepository.Create(user);
+                await _userRepository.CreateAsync(user);
             }
 
-            var flat = flatRepository.Get(url);
+            var flat = await _flatRepository.GetAsync(url);
 
             if (flat == null)
             {
                 flat = new Flat() { Url = url, LastPrice = 0 };
 
-                flatRepository.Create(flat);
+                await _flatRepository.CreateAsync(flat);
             }
 
             user.Flats.Add(flat);
             flat.Users.Add(user);
 
-            userRepository.Update(user);
-            flatRepository.Update(flat);
+            await _userRepository.UpdateAsync(user);
+            await _flatRepository.UpdateAsync(flat);
 
             Console.WriteLine($"Подписка добавлена: {email} - {url}");
         }
@@ -83,11 +105,20 @@ namespace PrinzipMonitorService.PLL.Controllers
         /// <returns></returns>
         [Route("GetSubscriptionsByEmail")]
         [HttpGet]
-        public List<Flat> GetSubscriptionsByEmail(string email)
+        public async Task<List<string>> GetSubscriptionsByEmail(string email)
         {
-            var user = userRepository.Get(email);
+            var user = await _userRepository.GetAsync(email);
 
-            return user.Flats.ToList();
+            var flats = user.Flats;
+
+            var result = new List<string>();
+
+            foreach (var flat in flats)
+            {
+                result.Add(_mapper.Map<FlatViewModel>(flat).Url);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -97,7 +128,7 @@ namespace PrinzipMonitorService.PLL.Controllers
         [HttpGet]
         public async Task CheckPrices()
         {
-            var flats = flatRepository.GetAll().ToList();
+            var flats = await _flatRepository.GetAllAsync();
 
             if (flats != null)
             {
@@ -109,7 +140,7 @@ namespace PrinzipMonitorService.PLL.Controllers
                     {
                         int? oldPrice = flat.LastPrice;
                         flat.LastPrice = newPrice;
-                        flatRepository.Update(flat);
+                        await _flatRepository.UpdateAsync(flat);
 
                         foreach (var user in flat.Users)
                         {

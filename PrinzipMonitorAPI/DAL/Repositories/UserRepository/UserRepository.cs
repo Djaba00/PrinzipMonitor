@@ -12,34 +12,34 @@ namespace PrinzipMonitorService.DAL.Repositories.UserRepository
             _db = db;
         }
 
-        public void Create(User user)
+        public async Task CreateAsync(User user)
         {
             if (_db.Users.FirstOrDefault(u => u.Email == user.Email) is null)
             {
                 _db.Users.Add(user);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
                 
         }
 
-        public User Get(string email)
+        public async Task<User> GetAsync(string email)
         {
-            return _db.Users.Include(u => u.Flats).FirstOrDefault(u => u.Email == email);
+            return await _db.Users.Include(u => u.Flats).FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<List<User>> GetAllAsync()
         {
-            return _db.Users.Include(u => u.Flats);
+            return await _db.Users.Include(u => u.Flats).ToListAsync();
         }
 
-        public void Update(User updateUser)
+        public async Task UpdateAsync(User updateUser)
         {
-            User currentUser = Get(updateUser.Email);
+            User currentUser = await GetAsync(updateUser.Email);
 
             currentUser.Flats = updateUser.Flats;
 
             _db.Users.Update(currentUser);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
     }
 }

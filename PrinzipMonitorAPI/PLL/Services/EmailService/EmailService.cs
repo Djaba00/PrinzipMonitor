@@ -7,9 +7,10 @@ namespace PrinzipMonitorService.PLL.Services.EmailService
     {
         public static async Task<bool> SendEmailAsync(string email, int? oldPrice, int? newPrice)
         {
+            const string fromEmail = EmailAccounts.GmailEmail;
             const string fromPassword = EmailAccounts.GmailPass;
 
-            var fromAddress = new MailAddress("yatytdlatestov@gmail.com", "FlatQuestion");
+            var fromAddress = new MailAddress(fromEmail, "FlatQuestion");
 
             var toAddress = new MailAddress(email);
 
